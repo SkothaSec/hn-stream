@@ -1,13 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Outlet } from "react-router-dom";
+import TrackList from "./TrackList";
+import { Container } from "semantic-ui-react";
 
 const Library = (props) => {
 	return (
-		<>
+		<div>
 			<h1>Library</h1>
-			<Outlet />
-		</>
+			<Container>
+				<TrackList />
+			</Container>
+		</div>
 	);
 };
 

@@ -2,16 +2,27 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { loggedInUserState, signUpUserState, profileListState } from "../../recoil/atoms";
-import { Button, Header, Image, Modal, Menu, Icon, Input } from "semantic-ui-react";
+import {
+	Button,
+	Header,
+	Image,
+	Modal,
+	Menu,
+	Icon,
+	Input,
+	Form,
+	Message,
+	List,
+} from "semantic-ui-react";
 import SignUpForm from "./SignUpForm";
 import { uuid } from "../../lib";
 
 const SignUp = (props) => {
 	const { isAuthenticated, color } = props;
 	const [inputValue, setInputValue] = useState("");
-	const setProfileList = useSetRecoilState(signUpUserState);
+	const setProfileList = useSetRecoilState(profileListState);
 	const setLoggedInUser = useSetRecoilState(loggedInUserState);
-	const setSignUpUser = useRecoilState(signUpUserState);
+	const setSignUpUser = useSetRecoilState(signUpUserState);
 
 	const [open, setOpen] = useState(false);
 	const [signIn, setSignIn] = useState(null);
@@ -41,8 +52,8 @@ const SignUp = (props) => {
 	const defaultImage =
 		"https://serc.carleton.edu/download/images/54334/empty_user_icon_256.v2.png";
 	const addProfile = () => {
-		setProfileList((oldTodoList) => [
-			...oldTodoList,
+		setProfileList((oldProfileList) => [
+			...oldProfileList,
 			{
 				id,
 				title: username,
@@ -91,14 +102,17 @@ const SignUp = (props) => {
 			: setValid({ ...valid, password: false });
 	};
 
-	const handleAccept = (newValue) => {
+	const handleAccept = () => {
 		console.debug({
 			component: "SignUp",
 			event: "handle accept signup",
 			actions: "Close Modal",
 		});
 		validate();
-		valid ? addProfile() : console.debug({ valid });
+		if (valid) {
+			addProfile();
+			console.debug({ valid, submit: "submitting" });
+		}
 	};
 	const handleDecline = () => {
 		console.debug({
@@ -119,63 +133,70 @@ const SignUp = (props) => {
 			<Header icon="archive" content="Archive Old Messages" />
 
 			<Modal.Content>
-				<Input
-					icon="user"
-					iconPosition="left"
-					label="Username"
-					placeholder="Username"
-					value={username}
-					onChange={handleUsernameChange}
-				/>
-				<Input
-					icon="key"
-					iconPosition="left"
-					label="Password"
-					placeholder="Password"
-					value={password}
-					onChange={handleUsernameChange}
-				/>
-				<Input
-					icon="at"
-					iconPosition="left"
-					label="Email"
-					placeholder="Email"
-					value={email}
-					onChange={handleEmailChange}
-				/>
-				<Input
-					label="First Name"
-					placeholder="First Name"
-					value={firstName}
-					onChange={handleFirstNameChange}
-				/>
-				<Input
-					label="Last Name"
-					placeholder="Last Name"
-					value={lastName}
-					onChange={handleLastNameChange}
-				/>
+				<Form>
+					<Form.Group widths="equal">
+						<Form.Input
+							icon="user"
+							iconPosition="left"
+							placeholder="Username"
+							type="text"
+							label="Username"
+							value={username}
+							onChange={handleUsernameChange}
+							error={
+								username.length < 4 && {
+									content: "Username must be greater than 4 characters",
+									pointing: "below",
+								}
+							}
+						/>
+
+						<Form.Input
+							label="Password"
+							icon="key"
+							iconPosition="left"
+							//label="Password"
+							type="password"
+							placeholder="Password"
+							value={password}
+							onChange={handlePasswordChange}
+							error={
+								password.length < 6 && {
+									content: "Password must be greater than 6 characters",
+									pointing: "below",
+								}
+							}
+						/>
+					</Form.Group>
+					<Form.Group widths="equal">
+						<Form.Input
+							label="First Name"
+							placeholder="First Name"
+							value={firstName}
+							onChange={handleFirstNameChange}
+						/>
+						<Form.Input
+							label="Last Name"
+							placeholder="Last Name"
+							value={lastName}
+							onChange={handleLastNameChange}
+						/>
+					</Form.Group>
+					<Form.Input
+						icon="at"
+						iconPosition="left"
+						label="Email"
+						placeholder="Email"
+						value={email}
+						onChange={handleEmailChange}
+					/>
+				</Form>
 			</Modal.Content>
 			<Modal.Actions>
-				<Button
-					color="red"
-					onChange={handleAccept}
-					onClick={console.debug({
-						component: "SignUpForm",
-						action: "decline clicked",
-						data: "no data",
-					})}>
+				<Button color="red" onClick={handleDecline}>
 					<Icon name="remove" /> No
 				</Button>
-				<Button
-					color="green"
-					value={true}
-					onChange={handleAccept}
-					onClick={console.debug({
-						component: "SignUpForm",
-						action: "decline clicked",
-						data: "no data",
-					})}>
+				<Button color="green" value={true} onClick={handleAccept}>
 					<Icon name="checkmark" /> Yes
 				</Button>
 			</Modal.Actions>
@@ -185,13 +206,9 @@ const SignUp = (props) => {
 
 SignUp.propTypes = {
 	color: PropTypes.string,
-	onSignUp: PropTypes.node,
-	onDeclineSignUp: PropTypes.node,
 };
 SignUp.defaultProps = {
 	color: "green",
-	onSignUp: () => console.debug({ component: "SignUp", action: "Accept" }),
-	onDeclineSignUp: () => console.debug({ component: "SignUp", action: "Decline" }),
 };
 
 export default SignUp;

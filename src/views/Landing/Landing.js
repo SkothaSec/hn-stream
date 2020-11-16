@@ -4,8 +4,8 @@ import { useRecoilState } from "recoil";
 import { loggedInUserState } from "../../recoil/atoms";
 
 const Landing = (props) => {
-	const [loggedIn, setLoggedIn] = useRecoilState(loggedInUserState);
-	if (loggedIn) {
+	const [userState, setUserState] = useRecoilState(loggedInUserState);
+	if (userState.authenticated) {
 		return <div>Logged In Landing</div>;
 	} else {
 		return <div>Logged Out Landing</div>;

@@ -38,9 +38,13 @@ const BaseLinks = (props) => {
 const NavLinks = (props) => {
 	const { linksArr, isAuthenticated, onClick, onAuthClick } = props;
 	const [userState, setUserState] = useRecoilState(loggedInUserState);
-	const user = useRecoilValue(loggedInUserSelector);
-	const [activeItem, setActiveItem] = useState();
 
+	const [activeItem, setActiveItem] = useState();
+	console.debug({
+		component: "NavLinks",
+		meta: { userState },
+		event: "get recoil value for user",
+	});
 	const handleClick = (e, { name }) => setActiveItem(name);
 	const handleAuthClick = (e, { name }) => {
 		setActiveItem(name);
@@ -48,8 +52,6 @@ const NavLinks = (props) => {
 			? setUserState({ authenticated: false })
 			: console.log("login clicked");
 	};
-
-	console.log({ user, authenticated: user.authenticated });
 
 	return (
 		<>
@@ -61,7 +63,7 @@ const NavLinks = (props) => {
 
 			<Menu.Menu position="right">
 				<SearchBar />
-				{user.authenticated && (
+				{userState.authenticated && (
 					<Menu.Item
 						as={Link}
 						to="/user"
@@ -76,9 +78,9 @@ const NavLinks = (props) => {
 				)}
 				<Menu.Item
 					as={Link}
-					to={user.authenticated ? "/" : "login"}
-					name={user.authenticated ? "logout" : "login"}
-					active={activeItem === (user.authenticated ? "logout" : "login")}
+					to={userState.authenticated ? "/" : "login"}
+					name={userState.authenticated ? "logout" : "login"}
+					active={activeItem === (userState.authenticated ? "logout" : "login")}
 					onClick={handleAuthClick}
 				/>
 			</Menu.Menu>

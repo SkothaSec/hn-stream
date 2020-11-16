@@ -23,7 +23,7 @@ const Routes = () => {
 			<Route
 				path="/"
 				element={<Landing />}
-				redirectTo={user.authenticated && "home"}
+				redirectTo={!user.authenticated && "home"}
 			/>
 			<Route path="home" element={<Home />} />
 			<Route path="about" element={<About />} />
