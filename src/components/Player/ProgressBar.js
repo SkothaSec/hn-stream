@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Progress } from "semantic-ui-react";
 
 const ProgressBar = (props) => {
-	return <Progress {...props} />;
+	return <Progress active {...props} />;
 };
 
 ProgressBar.propTypes = {};

@@ -3,35 +3,29 @@ import PropTypes from "prop-types";
 import { Icon } from "semantic-ui-react";
 
 const ControlButtons = (props) => {
-	const { handleClick, play } = props;
+	const { play } = props;
+
 	return (
 		<div>
-			<Icon name="shuffle" link color="blue" onClick={handleClick.shuffle} />
-			<Icon name="step backward" link color="blue" onClick={handleClick.last} />
+			<Icon name="shuffle" link color="blue" {...props} />
+			<Icon name="step backward" link color="blue" {...props} />
 			{play ? (
-				<Icon name="pause circle" link color="blue" onClick={handleClick.play} />
+				<Icon name="pause circle" link color="blue" {...props} />
 			) : (
-				<Icon name="play circle" link color="blue" onClick={handleClick.pause} />
+				<Icon name="play circle" link color="blue" {...props} />
 			)}
-			<Icon name="step forward" link color="blue" onClick={handleClick.next} />
-			<Icon name="repeat" link color="blue" onClick={handleClick.repeat} />
+			<Icon name="step forward" link color="blue" {...props} />
+			<Icon name="repeat" link color="blue" {...props} />
 		</div>
 	);
 };
 
 ControlButtons.propTypes = {
-	handleClick: PropTypes.object,
+	play: PropTypes.bool,
 };
 
 ControlButtons.defaultProps = {
-	handleClick: {
-		shuffle: () => console.debug("shuffle"),
-		play: () => console.debug("play"),
-		pause: () => console.debug("pause"),
-		next: () => console.debug("next"),
-		last: () => console.debug("last"),
-		repeat: () => console.debug("repeat"),
-	},
+	play: false,
 };
 
 export default ControlButtons;
